@@ -37,6 +37,8 @@ Element.prototype.getOffset = function( relEl, withScroll ) {
  * end
  */
 
+/* loop - begin */
+
 Array.prototype.fastEach = function( fn ) {
   var arr = this, i, l = arr.length, result;
   for( i = 0; i < l; i++ ) {
@@ -45,6 +47,15 @@ Array.prototype.fastEach = function( fn ) {
 };
 NodeList.prototype.fastEach = Array.prototype.fastEach;
 HTMLCollection.prototype.fastEach = Array.prototype.fastEach;
+
+Array.prototype.fasterEach = function( fn ) {
+  var arr = this, i, l = arr.length, result;
+  for( i = 0; i <= l; ++i ) {
+    fn( arr[ i ], i );
+  }
+};
+NodeList.prototype.fasterEach = Array.prototype.fasterEach;
+HTMLCollection.prototype.fasterEach = Array.prototype.fasterEach;
 
 
 function loop1(){
@@ -135,6 +146,21 @@ function loop8(){
 	} )
 }
 
+function loop9(){
+	var s = 0;
+	testArr1.fasterEach( function(el,i){
+		if( i % 2 === 0 ){
+			s += i;
+		}else{
+			s -= i;
+		}
+	} )
+}
+
+/* loop - end */
+
+/* style - begin */
+
 function style1(){
 	var i = 0, l = testArr1.length;
 	for( i; i < l; i++ ){
@@ -153,6 +179,10 @@ function style2(){
 		is.textTransform = 'underline';
 	}
 }
+
+/* style - end */
+
+/* mapping - begin */
 
 function mapping1(){
 	var s = 0, outArr = [];
@@ -189,6 +219,10 @@ function mapping5(){
 	});
 }
 
+/* mapping - end */
+
+/* filtering - begin */
+
 function filtering1(){
 	var s = 0, outArr = [];
 	for( var i = 0; i < testArr2.length; i++ ){
@@ -217,6 +251,9 @@ function filtering4(){
 	});
 }
 
+/* filtering - end */
+
+/* getOffset - begin */
 
 function getOffset(el, relEl){
 	if( !el || el === relEl ) return { l: 0, t: 0 };
@@ -224,7 +261,6 @@ function getOffset(el, relEl){
 	var pOff = getOffset( el.offsetParent, relEl );
 	return { l: eOff.l + pOff.l, t: eOff.t + pOff.t };
 }
-
 
 Element.prototype.getOffset = function(relEl){
 	var el, offset = { l: 0, t: 0 };
@@ -244,6 +280,8 @@ function getOffset2(i){
 	if( !i ) console.log( childEl.getOffset() );
 	else childEl.getOffset();
 }
+
+/* getOffset - end */
 
 function reset(){
 	var i = 0, l = testArr1.length, is;
@@ -280,22 +318,24 @@ function runTest(){
 	setTimeout( function(){
 
 		// // test1
-		measureFn( loop1 );
-		measureFn( loop2 );
-		measureFn( loop3 );
-		measureFn( loop4 );
-		measureFn( loop5 );
-		measureFn( loop6 );
-		measureFn( loop7 );
-		measureFn( loop8 );
-		measureFn( loop1 );
-		measureFn( loop2 );
-		measureFn( loop3 );
-		measureFn( loop4 );
-		measureFn( loop5 );
-		measureFn( loop6 );
-		measureFn( loop7 );
-		measureFn( loop8 );
+		// measureFn( loop1 );
+		// measureFn( loop2 );
+		// measureFn( loop3 );
+		// measureFn( loop4 );
+		// measureFn( loop5 );
+		// measureFn( loop6 );
+		// measureFn( loop7 );
+		// measureFn( loop8 );
+		// measureFn( loop9 );
+		// measureFn( loop1 );
+		// measureFn( loop2 );
+		// measureFn( loop3 );
+		// measureFn( loop4 );
+		// measureFn( loop5 );
+		// measureFn( loop6 );
+		// measureFn( loop7 );
+		// measureFn( loop8 );
+		// measureFn( loop9 );
 
 		// // test2
 		// measureFn( style1 );
@@ -303,7 +343,7 @@ function runTest(){
 		// measureFn( style1 );
 		// measureFn( style2 );
 
-		// test3
+		// // test3
 		// measureFn( mapping1 );
 		// measureFn( mapping2 );
 		// measureFn( mapping3 );
@@ -331,6 +371,7 @@ function runTest(){
 		// measureFn( getOffset1 );
 		// measureFn( getOffset2 );
 
+		console.log( 'test finished' );
 	}, 1000 );
 }
 
