@@ -283,6 +283,227 @@ function getOffset2(i){
 
 /* getOffset - end */
 
+/* pattern - begin */
+
+var ClosureObj = function() {
+	var counter = 0;
+	var subCounter = 0;
+	var limit = 100;
+
+	function inc(x) {
+		counter += x;
+		return counter;
+	}
+	
+	function dec(x) {
+		counter -= x;
+		return counter;
+	}
+
+	function calc(arr) {
+		var i = 0, l = arr.length;
+
+		for( i; i < l; i++ ){
+			inc(2);
+			dec(1);
+
+			while( subCounter < limit ) {
+				subCounter++;
+			}
+			subCounter = 0;
+		}
+
+		return counter;
+	}
+
+	return {
+		inc: inc,
+		dec: dec,
+		calc: calc
+	}
+};
+var myClosureOut = ClosureObj();
+
+var ClosureThisObj = function() {
+	this.counter = 0;
+	this.subCounter = 0;
+	this.limit = 100;
+
+	this.inc = function(x) {
+		this.counter += x;
+		return this.counter;
+	}
+
+	this.dec = function(x) {
+		this.counter -= x;
+		return this.counter;
+	}
+
+	this.calc = function(arr) {
+		var i = 0, l = arr.length;
+
+		for( i; i < l; i++ ){
+			this.inc(2);
+			this.dec(1);
+
+			while( this.subCounter < this.limit ) {
+				this.subCounter++;
+			}
+			this.subCounter = 0;
+		}
+
+		return this.counter;
+	}
+
+	return {
+		inc: this.inc.bind(this),
+		dec: this.dec.bind(this),
+		calc: this.calc.bind(this)
+	}
+};
+var myClosureThisOut = ClosureThisObj();
+
+var PrototypeObj = function() {
+	this.counter = 0;
+	this.subCounter = 0;
+	this.limit = 100;
+};
+PrototypeObj.prototype.inc = function(x) {
+	this.counter += x;
+	return this.counter;
+}
+PrototypeObj.prototype.dec = function(x) {
+	this.counter -= x;
+	return this.counter;
+}
+PrototypeObj.prototype.calc = function(arr) {
+	var i = 0, l = arr.length;
+
+	for( i; i < l; i++ ){
+		this.inc(2);
+		this.dec(1);
+
+		while( this.subCounter < this.limit ) {
+			this.subCounter++;
+		}
+		this.subCounter = 0;
+	}
+
+	return this.counter;
+}
+var myPrototypeOut = new PrototypeObj();
+
+class ClassObj {
+	constructor() {
+		this.counter = 0;
+		this.subCounter = 0;
+		this.limit = 100;
+	}
+
+	inc(x) {
+		this.counter += x;
+		return this.counter;
+	}
+
+	dec(x) {
+		this.counter -= x;
+		return this.counter;
+	}
+
+	calc(arr) {
+		var i = 0, l = arr.length;
+
+		for( i; i < l; i++ ){
+			this.inc(2);
+			this.dec(1);
+	
+			while( this.subCounter < this.limit ) {
+				this.subCounter++;
+			}
+			this.subCounter = 0;
+		}
+
+		return this.counter;
+	}
+}
+var myClassOut = new ClassObj();
+
+"use strict";
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ClassObjBabel = function () {
+	function ClassObjBabel() {
+		_classCallCheck(this, ClassObjBabel);
+
+		this.counter = 0;
+		this.subCounter = 0;
+		this.limit = 100;
+	}
+
+	_createClass(ClassObjBabel, [{
+		key: "inc",
+		value: function inc(x) {
+			this.counter += x;
+			return this.counter;
+		}
+	}, {
+		key: "dec",
+		value: function dec(x) {
+			this.counter -= x;
+			return this.counter;
+		}
+	}, {
+		key: "calc",
+		value: function calc(arr) {
+			var i = 0,
+			    l = arr.length;
+
+			for (i; i < l; i++) {
+				this.inc(2);
+				this.dec(1);
+
+				while (this.subCounter < this.limit) {
+					this.subCounter++;
+				}
+				this.subCounter = 0;
+			}
+
+			return this.counter;
+		}
+	}]);
+
+	return ClassObjBabel;
+}();
+
+var myClassBabelOut = new ClassObjBabel();
+
+function pattern1(){
+	myClosureOut.dec(myClosureOut.calc(testArr2));
+}
+
+function pattern2(){
+	myClosureThisOut.dec(myClosureThisOut.calc(testArr2));
+}
+
+function pattern3(){
+	myPrototypeOut.dec(myPrototypeOut.calc(testArr2));
+}
+
+function pattern4(){
+	myClassOut.dec(myClassOut.calc(testArr2));
+}
+
+function pattern5(){
+	myClassBabelOut.dec(myClassBabelOut.calc(testArr2));
+}
+
+/* pattern - end */
+
+/* core - begin */
+
 function reset(){
 	var i = 0, l = testArr1.length, is;
 	for( i; i < l; i++ ){
@@ -301,7 +522,7 @@ function median( sequence ){
 function measureFn( fn ) {
 	var i, t0, t1, measures = [], repeat = 500;
 	
-	for( i = 0; i < 500; i++ ){
+	for( i = 0; i < repeat; i++ ){
 		t0 = performance.now();
 		fn(i);
 		t1 = performance.now();
@@ -371,6 +592,18 @@ function runTest(){
 		// measureFn( getOffset1 );
 		// measureFn( getOffset2 );
 
+		// // test6
+		measureFn( pattern1 );
+		measureFn( pattern2 );
+		measureFn( pattern3 );
+		measureFn( pattern4 );
+		measureFn( pattern5 );
+		measureFn( pattern1 );
+		measureFn( pattern2 );
+		measureFn( pattern3 );
+		measureFn( pattern4 );
+		measureFn( pattern5 );
+
 		console.log( 'test finished' );
 	}, 1000 );
 }
@@ -414,3 +647,5 @@ window.onload = function(){
 	body.appendChild( tmpEl );
 	childEl = document.getElementById('child');
 };
+
+/* core - end */
